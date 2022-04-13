@@ -12,7 +12,7 @@ public class DataManager {
             String monthName = monthsList.get(monthNumber);
 
             if ((monthsData[monthIndex] != null) && (yearData.revenueList.get(monthName) != null)
-                    && (yearData.expensesList.get(monthName) != null)) {
+                                                 && (yearData.expensesList.get(monthName) != null)) {
                 HashMap<String, Integer> reviewedMonthRevenue = monthsData[monthIndex].revenueList;
                 HashMap<String, Integer> reviewedMonthExpenses = monthsData[monthIndex].expensesList;
                 int monthTotalRevenue = 0;
@@ -20,23 +20,12 @@ public class DataManager {
                 boolean isRevenueMatching = true;
                 boolean isExpensesMatching = true;
 
-//                System.out.println("Индекс месяца: " + monthIndex);
-
-
                 for (int revenue : reviewedMonthRevenue.values()) {
                     monthTotalRevenue += revenue;
-//                    System.out.println(revenue);
-//                    System.out.println(monthTotalRevenue);
                 }
-//                System.out.println("Общий доход за месяц " + (monthIndex + 1) + ": " + monthTotalRevenue);
-
                 for (int expenses : reviewedMonthExpenses.values()) {
                     monthTotalExpenses += expenses;
-//                    System.out.println(expenses);
-//                    System.out.println(monthTotalExpenses);
-//                System.out.println(monthTotalExpenses);
                 }
-//                System.out.println("Общий расход за месяц " + (monthIndex + 1) + ": " + monthTotalExpenses);
 
                 if (monthTotalRevenue != yearData.revenueList.get(monthName)) {
                     isRevenueMatching = false;
@@ -50,7 +39,7 @@ public class DataManager {
                 }
 
             } else if ((monthsData[monthIndex] != null) || (yearData.revenueList.get(monthName) != null)
-                    || (yearData.expensesList.get(monthName) != null)) {
+                                                        || (yearData.expensesList.get(monthName) != null)) {
                 mismatchingMonths.add(monthName);
             }
         }
@@ -86,15 +75,15 @@ public class DataManager {
                     }
                 }
                 System.out.println("Месяц: " + monthsList.get(monthNumber));
-                System.out.println("Самый прибыльный товар: " + maxRevenueItem + ", " + maxRevenue + ".");
-                System.out.println("Самая большая трата: " + maxExpenseItem + ", " + maxExpense + ".");
+                System.out.println("Самый прибыльный товар: " + maxRevenueItem + " на сумму " + maxRevenue + ".");
+                System.out.println("Самая большая трата: " + maxExpenseItem + " на сумму " + maxExpense + ".");
                 System.out.println();
             }
         }
     }
 
-    public void displayYearData(HashMap<String, String> monthsList, String year, HashMap<String, Integer> revenueList,
-                                            HashMap<String, Integer> expensesList) {
+    public void displayYearData(HashMap<String, String> monthsList, String year,
+                                HashMap<String, Integer> revenueList, HashMap<String, Integer> expensesList) {
         float expensesSum = 0;
         float revenueSum = 0;
 
@@ -102,8 +91,8 @@ public class DataManager {
         System.out.println();
         for (String monthName : monthsList.values()) {
             if ((expensesList.get(monthName) != null) && (expensesList.get(monthName) != null)) {
-                System.out.println("Прибыль за месяц " + monthName + " составила " + "."
-                                    + (revenueList.get(monthName) - expensesList.get(monthName)));
+                System.out.println("Прибыль за " + monthName + " составила "
+                                    + (revenueList.get(monthName) - expensesList.get(monthName)) + ".");
             }
         }
         System.out.println();
@@ -115,9 +104,7 @@ public class DataManager {
             }
         }
 
-//        System.out.println("Расход: " + expensesSum + ".");
         System.out.println("Средний расход за все месяцы в году: " + expensesSum / expensesList.size() + ".");
-//        System.out.println("Доход: " + revenueSum + ".");
         System.out.println("Средний доход за все месяцы в году: " + revenueSum / revenueList.size() + ".");
         System.out.println();
     }

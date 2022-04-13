@@ -14,69 +14,77 @@ public class Main {
             printMenu();
             userInput = scanner.nextLine();
 
-            if (userInput.equals("1")) {
-                fileReader.readMonthReports();
+            switch (userInput) {
+                case "1":
+                    fileReader.readMonthReports();
 
-            } else if (userInput.equals("2")) {
-                fileReader.readYearReport();
+                    break;
+                case "2":
+                    fileReader.readYearReport();
 
-            } else if (userInput.equals("3")) {
-                if (fileReader.isMonthsDataReady && fileReader.isYearDataReady) {
-                    ArrayList<String> misMatchingMonths = dataManager.matchReports(fileReader.MONTHS_LIST,
-                                                                                    fileReader.monthsData,
-                                                                                    fileReader.yearData);
+                    break;
+                case "3":
+                    if (fileReader.isMonthsDataReady && fileReader.isYearDataReady) {
+                        ArrayList<String> misMatchingMonths = dataManager.matchReports(fileReader.MONTHS_LIST,
+                                                                                       fileReader.monthsData,
+                                                                                       fileReader.yearData);
 
-                    if (misMatchingMonths.isEmpty()) {
-                        System.out.println("Несоответствий нет.");
+                        if (misMatchingMonths.isEmpty()) {
+                            System.out.println("Несоответствий нет.");
+                            System.out.println();
+
+                        } else {
+                            System.out.print("Обнаружены несоответствия в следующих месяцах: ");
+                            for (int i = 0; i < misMatchingMonths.size() - 1; i++) {
+                                System.out.print(misMatchingMonths.get(i) + ", ");
+                            }
+                            System.out.println(misMatchingMonths.get(misMatchingMonths.size() - 1) + ".");
+                            System.out.println();
+                        }
+
+                    } else if (!fileReader.isMonthsDataReady && !fileReader.isYearDataReady) {
+                        System.out.println("Пожалуйста, запустите считывание годового и месячных отчетов " +
+                                "перед проведением сверки.");
+                        System.out.println();
+
+                    } else if (!fileReader.isMonthsDataReady) {
+                        System.out.println("Пожалуйста, считайте месячные отчеты перед проведением сверки.");
                         System.out.println();
 
                     } else {
-                        System.out.print("Обнаружены несоответствия в следующих месяцах: ");
-
-                        for (int i = 0; i < misMatchingMonths.size() - 1; i++) {
-                            System.out.print(misMatchingMonths.get(i) + ", ");
-                        }
-                        System.out.println(misMatchingMonths.get(misMatchingMonths.size() - 1) + ".");
+                        System.out.println("Пожалуйста, считайте годовой отчет перед проведением сверки.");
+                        System.out.println();
                     }
 
-                } else if (!fileReader.isMonthsDataReady && !fileReader.isYearDataReady) {
-                    System.out.println("Пожалуйста, запустите считывание годового и месячных отчетов " +
-                            "перед проведением сверки.");
+                    break;
+                case "4":
+                    if (fileReader.isMonthsDataReady) {
+                        dataManager.displayMonthsData(fileReader.MONTHS_LIST, fileReader.monthsData);
+                    } else {
+                        System.out.println("Пожалуйста, считайте месячные отчеты перед выводом месячных данных.");
+                        System.out.println();
+                    }
+
+                    break;
+                case "5":
+                    if (fileReader.isYearDataReady) {
+                        dataManager.displayYearData(fileReader.MONTHS_LIST, fileReader.yearData.currentYear,
+                                                                            fileReader.yearData.revenueList,
+                                                                            fileReader.yearData.expensesList);
+                    } else {
+                        System.out.println("Пожалуйста, считайте годовой отчет перед выводом данных за год.");
+                        System.out.println();
+                    }
+
+                    break;
+                case "0":
+                    System.out.println("Программа завершена.");
+                    return;
+
+                default:
+                    System.out.println("Такой команды нет.");
                     System.out.println();
-
-                } else if (!fileReader.isMonthsDataReady) {
-                    System.out.println("Пожалуйста, считайте месячные отчеты перед проведением сверки.");
-                    System.out.println();
-
-                } else {
-                    System.out.println("Пожалуйста, считайте годовой отчет перед проведением сверки.");
-                    System.out.println();
-                }
-
-
-            } else if (userInput.equals("4")) {
-                if (fileReader.isMonthsDataReady) {
-                    dataManager.displayMonthsData(fileReader.MONTHS_LIST, fileReader.monthsData);
-                } else {
-                    System.out.println("Пожалуйста, считайте месячные отчеты перед выводом месячных данных.");
-                    System.out.println();
-                }
-
-            } else if (userInput.equals("5")) {
-                if (fileReader.isYearDataReady) {
-                    dataManager.displayYearData(fileReader.MONTHS_LIST, fileReader.yearData.currentYear,
-                                                fileReader.yearData.revenueList, fileReader.yearData.expensesList);
-                } else {
-                    System.out.println("Пожалуйста, считайте годовой отчет перед выводом данных за год.");
-                    System.out.println();
-                }
-
-            } else if (userInput.equals("0")) {
-                System.out.println("Программа завершена.");
-                return;
-
-            } else {
-                System.out.println("Такой команды нет.");
+                    break;
             }
         }
     }
