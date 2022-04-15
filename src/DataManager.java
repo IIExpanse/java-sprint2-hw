@@ -1,58 +1,65 @@
+import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 public class DataManager {
 
-    public ArrayList<String> matchReports(HashMap<String, String> monthsList,
-                                          MonthData[] monthsData, YearData yearData) {
-        ArrayList<String> mismatchingMonths = new ArrayList<>();
+    public List<String> matchReports(Map<String, String> monthsList, MonthlyReport[] monthlyReports,
+                                                                         YearlyReport yearlyReport) {
+        List<String> mismatchingMonths = new ArrayList<>();
 
         for (String monthNumber : monthsList.keySet()) {
-            byte monthIndex = (byte) (Integer.parseInt(monthNumber) - 1);
+            int monthIndex = (Integer.parseInt(monthNumber) - 1);
             String monthName = monthsList.get(monthNumber);
 
-            if ((monthsData[monthIndex] != null) && (yearData.revenueList.get(monthName) != null)
-                                                 && (yearData.expensesList.get(monthName) != null)) {
-                HashMap<String, Integer> reviewedMonthRevenue = monthsData[monthIndex].revenueList;
-                HashMap<String, Integer> reviewedMonthExpenses = monthsData[monthIndex].expensesList;
-                int monthTotalRevenue = 0;
-                int monthTotalExpenses = 0;
-                boolean isRevenueMatching = true;
-                boolean isExpensesMatching = true;
-
-                for (int revenue : reviewedMonthRevenue.values()) {
-                    monthTotalRevenue += revenue;
-                }
-                for (int expenses : reviewedMonthExpenses.values()) {
-                    monthTotalExpenses += expenses;
-                }
-
-                if (monthTotalRevenue != yearData.revenueList.get(monthName)) {
-                    isRevenueMatching = false;
-                }
-                if (monthTotalExpenses != yearData.expensesList.get(monthName)) {
-                    isExpensesMatching = false;
-                }
-
-                if (!isRevenueMatching || !isExpensesMatching) {
+            if ((monthlyReports[monthIndex] != null) && (yearlyReport.revenueList.get(monthName) != null)
+                                                     && (yearlyReport.expensesList.get(monthName) != null)) {
+                if (checkIfMonthsMismatch(monthIndex, monthName, monthlyReports, yearlyReport)) {
                     mismatchingMonths.add(monthName);
                 }
 
-            } else if ((monthsData[monthIndex] != null) || (yearData.revenueList.get(monthName) != null)
-                                                        || (yearData.expensesList.get(monthName) != null)) {
+            } else if ((monthlyReports[monthIndex] != null) || (yearlyReport.revenueList.get(monthName) != null)
+                                                            || (yearlyReport.expensesList.get(monthName) != null)) {
                 mismatchingMonths.add(monthName);
             }
         }
         return mismatchingMonths;
     }
 
-    public void displayMonthsData(HashMap<String, String> monthsList, MonthData[] monthsData) {
-        for (String monthNumber : monthsList.keySet()) {
-            byte monthIndex = (byte) (Integer.parseInt(monthNumber) - 1);
+    private boolean checkIfMonthsMismatch(int monthIndex, String monthName, MonthlyReport[] monthlyReports,
+                                          YearlyReport yearlyReport) {
 
-            if (monthsData[monthIndex] != null) {
-                HashMap<String, Integer> reviewedMonthRevenue = monthsData[monthIndex].revenueList;
-                HashMap<String, Integer> reviewedMonthExpenses = monthsData[monthIndex].expensesList;
+        Map<String, Integer> reviewedMonthRevenue = monthlyReports[monthIndex].revenueList;
+        Map<String, Integer> reviewedMonthExpenses = monthlyReports[monthIndex].expensesList;
+        int monthTotalRevenue = 0;
+        int monthTotalExpenses = 0;
+        boolean isRevenueMatching = true;
+        boolean isExpensesMatching = true;
+
+        for (int revenue : reviewedMonthRevenue.values()) {
+            monthTotalRevenue += revenue;
+        }
+        for (int expenses : reviewedMonthExpenses.values()) {
+            monthTotalExpenses += expenses;
+        }
+
+        if (monthTotalRevenue != yearlyReport.revenueList.get(monthName)) {
+            isRevenueMatching = false;
+        }
+        if (monthTotalExpenses != yearlyReport.expensesList.get(monthName)) {
+            isExpensesMatching = false;
+        }
+
+        return !isRevenueMatching || !isExpensesMatching;
+    }
+
+    public void displayMonthlyReports(Map<String, String> monthsList, MonthlyReport[] monthlyReports) {
+        for (String monthNumber : monthsList.keySet()) {
+            int monthIndex = (Integer.parseInt(monthNumber) - 1);
+
+            if (monthlyReports[monthIndex] != null) {
+                Map<String, Integer> reviewedMonthRevenue = monthlyReports[monthIndex].revenueList;
+                Map<String, Integer> reviewedMonthExpenses = monthlyReports[monthIndex].expensesList;
                 int maxRevenue = 0;
                 int maxExpense = 0;
                 String maxRevenueItem = null;
@@ -82,8 +89,8 @@ public class DataManager {
         }
     }
 
-    public void displayYearData(HashMap<String, String> monthsList, String year,
-                                HashMap<String, Integer> revenueList, HashMap<String, Integer> expensesList) {
+    public void displayYearlyReport(Map<String, String> monthsList, String year,
+                                    Map<String, Integer> revenueList, Map<String, Integer> expensesList) {
         float expensesSum = 0;
         float revenueSum = 0;
 
